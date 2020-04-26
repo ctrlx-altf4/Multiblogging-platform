@@ -21,6 +21,25 @@ const SingleBlog = ({ blog }) => {
   useEffect(() => {
     loadRelated();
   }, []);
+  const head = () => (
+    <Head>
+      <title>
+        {blog.title} | {APP_NAME}
+      </title>
+      <meta name="description" content={blog.mdesc} />
+      <meta name="canonical" href={`${DOMAIN}/blogs/${query.slug}`} />
+      <meta property="og:title" content={`${blog.title} | ${APP_NAME}`} />
+      <meta property="og:description" content={`${blog.mdesc}`} />
+      <meta property="og:type" content="website" />
+      <meta property="og:url" content={`${DOMAIN}/blogs/${query.slug}`} />
+      <meta property="og:site_name" content={`${APP_NAME}`} />
+      {/* 
+      <meta property="og:image" content ={`${API}/blog/photo/${blog.slug}`}/>
+      <meta property="og:image:secure_url" content ={`${API}/blog/photo/${blog.slug}`}/>
+      <meta property="og:image:type" content ="image/jpg"/>
+      <meta property="fb:app_id" content ={`${FB_APP_ID}`}/> */}
+    </Head>
+  );
   const showBlogCategories = (blog) =>
     blog.categories.map((c, i) => (
       <Link key={i} href={`/categories/${c.slug}`}>
@@ -30,7 +49,7 @@ const SingleBlog = ({ blog }) => {
 
   const showBlogTags = (blog) =>
     blog.tags.map((t, i) => (
-      <Link key={i} href={`/categories/${t.slug}`}>
+      <Link key={i} href={`/tags/${t.slug}`}>
         <a className="btn btn-outline-primary mr-1 ml-1 mt-3 mb-3">{t.name}</a>
       </Link>
     ));
@@ -60,8 +79,11 @@ const SingleBlog = ({ blog }) => {
               </section>
               <section>
                 <p className="lead mt-3 mark">
-                  Written By {blog.postedBy.name} | Published{" "}
-                  {moment(blog.updatedAt).fromNow()}
+                  Written By{" "}
+                  <Link href={`/profile/${blog.postedBy.username}`}>
+                    <a>{blog.postedBy.username}</a>
+                  </Link>
+                  | Published {moment(blog.updatedAt).fromNow()}
                 </p>
                 <div className="pb-3">
                   {showBlogCategories(blog)}
@@ -83,7 +105,7 @@ const SingleBlog = ({ blog }) => {
               <hr />
               <div className="row">{showRelatedBlogs()}</div>
             </div>
-            <div className="conteiner pb-5">
+            <div className="container pb-5">
               <p>Show Comments</p>
             </div>
           </article>

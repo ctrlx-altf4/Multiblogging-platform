@@ -39,7 +39,7 @@ const Blogs = ({
       <meta property="og:type" content="website" />
       <meta property="og:url" content={`${DOMAIN}${router.pathname}`} />
       <meta property="og:site_name" content={`${APP_NAME}`} />
-
+      {/**Todo SEO */}
       {/* further SEO */}
       {/* <meta property="og:image" content={`${DOMAIN}/static/images/seoblog.jpg`}/>
       <meta property="og:image:secure_url" content={`${DOMAIN}/static/images/seoblog.jpg`} />
@@ -95,7 +95,7 @@ const Blogs = ({
   const showAllTags = () => {
     return tags.map((t, i) => {
       return (
-        <Link href={`/categories/${t.slug}`} key={i}>
+        <Link href={`/tags/${t.slug}`} key={i}>
           <a className="btn btn-outline-primary mr-1 ml-1 mt-3">{t.name}</a>
         </Link>
       );

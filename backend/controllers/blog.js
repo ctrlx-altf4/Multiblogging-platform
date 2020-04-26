@@ -114,7 +114,7 @@ exports.create = (req, res) => {
 exports.list = (req, res) => {
   Blog.find({})
     .populate("categories", "_id name slug")
-    .populate("tags", "_id name tag")
+    .populate("tags", "_id name slug")
     .populate("postedBy", "_id name username")
     .select(
       "_id title slug excerpt categories tags postedBy createdAt updatedAt"
@@ -139,7 +139,7 @@ exports.listAllBlogsCategoriesTags = (req, res) => {
 
   Blog.find({})
     .populate("categories", "_id name slug")
-    .populate("tags", "_id name tag")
+    .populate("tags", "_id name slug")
     .populate("postedBy", "_id name username profile")
     .sort({ createdAt: -1 })
     .skip(skip)
@@ -190,7 +190,7 @@ exports.read = (req, res) => {
   const slug = req.params.slug.toLowerCase();
   Blog.findOne({ slug })
     .populate("categories", "_id name slug")
-    .populate("tags", "_id name tag")
+    .populate("tags", "_id name slug")
     .populate("postedBy", "_id name username")
     .select(
       "_id title body slug mtitle mdesc categories tags postedBy createdAt updatedAt"
@@ -205,10 +205,9 @@ exports.read = (req, res) => {
     });
 };
 
-//unchecked
 exports.update = (req, res) => {
   const slug = req.params.slug.toLowerCase();
-
+  console.log(slug);
   Blog.findOne({ slug }).exec((err, oldBlog) => {
     if (err) {
       return res.status(400).json({
@@ -236,7 +235,7 @@ exports.update = (req, res) => {
         oldBlog.categories = categories.split(",");
       }
       if (tags) {
-        oldBlog.tags = categories.split(",");
+        oldBlog.tags = tags.split(",");
         oldBlog.desc = stripHtml(body.substring(0, 160));
       }
 
@@ -282,7 +281,7 @@ exports.listRelated = (req, res) => {
   const { _id, categories } = req.body.blog;
   Blog.find({ _id: { $ne: _id }, categories: { $in: categories } })
     .limit(limit)
-    .populate("postedBy", "_id name profile")
+    .populate("postedBy", "_id name username profile")
     .select("title slug excerpt postedBy createdAt updatedAt")
     .exec((err, blogs) => {
       if (err) {
@@ -301,7 +300,7 @@ exports.listSearch = (req, res) => {
       {
         $or: [
           { title: { $regex: search, $options: "i" } },
-          { body: { $regex: search, $options: "1" } },
+          { body: { $regex: search, $options: "i" } },
         ],
       },
       (err, blogs) => {

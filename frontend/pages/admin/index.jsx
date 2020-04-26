@@ -19,9 +19,7 @@ const index = () => {
                   </Link>
                 </li>
                 <li className="list-group-item">
-                  <Link href="/admin/crud/category-tag">
-                    <a>Create Tags</a>
-                  </Link>
+                  <a href="/admin/crud/category-tag">Create Tags</a>
                 </li>
                 <li className="list-group-item">
                   <Link href="/admin/crud/blog">

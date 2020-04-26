@@ -1,3 +1,5 @@
+import Head from "next/head";
+import Link from "next/link";
 //components
 import Layout from "../../components/Layout";
 import Private from "../../components/Auth/private";
@@ -5,7 +7,33 @@ const index = () => {
   return (
     <Layout>
       <Private>
-        <h1>From User</h1>
+        <div className="container-fluid">
+          <div className="row">
+            <div className="col-md-12 pt-5 pb-5">
+              <h1>User Dashboard</h1>
+            </div>
+            <div className="col-md-4">
+              <ul className="list-group">
+                <li className="list-group-item">
+                  <Link href="/user/crud/blog">
+                    <a>Create Blog</a>
+                  </Link>
+                </li>
+                <li className="list-group-item">
+                  <Link href="/user/crud/blogs">
+                    <a>Update/Delete Blog</a>
+                  </Link>
+                </li>
+                <li className="list-group-item">
+                  <Link href="/user/update">
+                    <a>Update Profile</a>
+                  </Link>
+                </li>
+              </ul>
+            </div>
+            <div className="col-md-8">Right</div>
+          </div>
+        </div>
       </Private>
     </Layout>
   );
