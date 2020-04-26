@@ -67,9 +67,7 @@ const ProfileUpdate = () => {
   const handleSubmit = (e) => {
     e.preventDefault();
     setValues({ ...values, loading: true });
-    console.log("nekjlj");
     update(token, userData).then((data) => {
-      console.log("Kljkjlk");
       if (data.error) {
         setValues({
           ...values,
