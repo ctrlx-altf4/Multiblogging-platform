@@ -1,10 +1,25 @@
 import fetch from "isomorphic-fetch";
 import cookie from "js-cookie";
 import { API } from "../config";
+import Router from "next/router";
 
 const token = "MultiBlogToken_ctrlxAltf4"; //cookie key
 const user = "MultBlogUser_ctrlxAltf4"; //localStorage key
 
+export const handleResponse = (res) => {
+  if (res.statue === 401) {
+    signOutAction(() => {
+      Router.push({
+        pathname: "/signin",
+        query: {
+          message: "Your login session was expired. Please Log in",
+        },
+      });
+    });
+  } else {
+    return;
+  }
+};
 export const signupAction = (user) => {
   return fetch(`${API}/signup`, {
     method: "POST",
@@ -98,6 +113,17 @@ export const isAuth = () => {
         return JSON.parse(localStorage.getItem(user));
       }
       return false;
+    }
+  }
+};
+
+export const updateUser = (userData, next) => {
+  if (process.browser) {
+    if (localStorage.getItem(user)) {
+      let auth = JSON.parse(localStorage.getItem(user));
+      auth = userData;
+      localStorage.setItem(user, JSON.stringify(auth));
+      next();
     }
   }
 };

@@ -8,5 +8,6 @@ module.exports = {
     USER: "MultBlogUser_ctrlxAltf4", //localStorage key
     domain_development: "http://localhost:3000",
     domain_production: "https://letssee.com",
+    DISQUS_SHORTNAME: "multiblog-platform",
   },
 };

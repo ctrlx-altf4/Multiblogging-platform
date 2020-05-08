@@ -4,7 +4,7 @@ import Layout from "../../components/Layout";
 import { userPublicProfile } from "../../actions/user";
 import { API, DOMAIN, APP_NAME } from "../../config";
 import moment from "moment";
-
+import ContactForm from " ../../components/form/ContactForm";
 //**Todo Check profile link Last maa username k xa? by creating a new user */
 const UserProfile = ({ user, blogs, query }) => {
   const head = () => (
@@ -46,13 +46,24 @@ const UserProfile = ({ user, blogs, query }) => {
             <div className="col-md-12">
               <div className="card">
                 <div className="card-body">
-                  <h5>{user.name}</h5>
-                  <Link href={`${user.profile}`}>
-                    <a>View Profile</a>
-                  </Link>
-                  <p className="text-muted">
-                    Joined {moment(user.createdAt).fromNow()}
-                  </p>
+                  <div className="row">
+                    <div className="col-md-8">
+                      <h5>{user.name}</h5>
+                      <p className="text-muted">
+                        Joined {moment(user.createdAt).fromNow()}
+                      </p>
+                    </div>
+                    <div className="col-md-4">
+                      <img
+                        src={
+                          user.username && `${API}/user/photo/${user.username}`
+                        }
+                        className="img img-fluid img-thumbnail mb-3"
+                        style={{ maxHeight: "100px", maxWidth: "100%" }}
+                        alt="user profile"
+                      />
+                    </div>
+                  </div>
                 </div>
               </div>
             </div>
@@ -78,7 +89,7 @@ const UserProfile = ({ user, blogs, query }) => {
                     Message {user.name}
                   </h5>
                   <br />
-                  <p>Contact Form</p>
+                  <ContactForm authorEmail={user.email} />
                 </div>
               </div>
             </div>

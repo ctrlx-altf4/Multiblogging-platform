@@ -1,11 +1,12 @@
 import Head from "next/head";
 import Link from "next/link";
-import Layout from "../../components/Layout";
 import { useState, useEffect } from "react";
 import { singleBlog, listRelated } from "../../actions/blog";
 import { API, DOMAIN, APP_NAME } from "../../config";
 import moment from "moment";
 
+import Layout from "../../components/Layout";
+import DisqusThred from "../../components/DisqusThread";
 import RelatedCard from "../../components/blog/RelatedCard";
 
 const SingleBlog = ({ blog }) => {
@@ -62,6 +63,17 @@ const SingleBlog = ({ blog }) => {
       </div>
     ));
   };
+  const showComments = () => {
+    return (
+      <div>
+        <DisqusThred
+          id={blog._id}
+          title={blog.title}
+          path={`/blog/${blog.slug}`}
+        />
+      </div>
+    );
+  };
   return (
     <React.Fragment>
       <Layout>
@@ -105,9 +117,7 @@ const SingleBlog = ({ blog }) => {
               <hr />
               <div className="row">{showRelatedBlogs()}</div>
             </div>
-            <div className="container pb-5">
-              <p>Show Comments</p>
-            </div>
+            <div className="container pt-5 pb-5">{showComments()}</div>
           </article>
         </main>
       </Layout>

@@ -41,6 +41,12 @@ const Header = (props) => {
                 <NavLink>Blogs</NavLink>
               </Link>
             </NavItem>
+
+            <NavItem>
+              <Link href="/contact">
+                <NavLink>Contact</NavLink>
+              </Link>
+            </NavItem>
             {isAuth() && isAuth().role === 0 && (
               <NavItem>
                 <Link href="/user">
@@ -82,6 +88,13 @@ const Header = (props) => {
                 </NavItem>
               </React.Fragment>
             )}
+            <NavItem>
+              <Link href="/user/crud/blog">
+                <NavLink className="btn btn-primary text-light">
+                  Write a Blog
+                </NavLink>
+              </Link>
+            </NavItem>
           </Nav>
         </Collapse>
       </Navbar>
