@@ -10,8 +10,10 @@ import { createBlog } from "../../actions/blog";
 const ReactQuill = dynamic(() => import("react-quill"), { ssr: false });
 
 import { QuillModules, QuillFormats } from "../../helpers/quill";
+
 const BlogLocal = "blog_CtrlxAltf4";
 const cookieToken = "MultiBlogToken_ctrlxAltf4"; //cookie key
+
 const CreateBlog = ({ router }) => {
   const blogFromLocalStorage = () => {
     if (typeof window === "undefined") {
@@ -24,40 +26,30 @@ const CreateBlog = ({ router }) => {
     }
   };
 
+  const [data, setData] = useState({
+    title: "",
+    body: blogFromLocalStorage(),
+    excerpt: "",
+    photo: null,
+    categories: [],
+    tags: [],
+  });
+
   const [categories, setCategories] = useState([]);
   const [tags, setTags] = useState([]);
 
-  const [checked, setChecked] = useState([]);
-  const [checkedTag, setCheckedTag] = useState([]);
-
-  const [body, setBody] = useState(blogFromLocalStorage());
-  const [values, setValues] = useState({
+  const [validation, setValidation] = useState({
     error: "",
-    sizeError: "",
     success: "",
-    formData: "",
-    title: "",
-    hidePublishButton: false,
   });
-
-  const {
-    error,
-    sizeError,
-    success,
-    formData,
-    title,
-    hidePublishButton,
-  } = values;
 
   const token = getCookie(cookieToken);
 
   useEffect(() => {
-    setValues({ ...values, formData: new FormData() });
-    initCategories();
-    initTags();
+    init();
   }, [router]);
 
-  const initCategories = () => {
+  const init = () => {
     getCategories().then((data) => {
       if (data.error) {
         setValues({ ...values, error: data.error });
@@ -65,8 +57,7 @@ const CreateBlog = ({ router }) => {
         setCategories(data);
       }
     });
-  };
-  const initTags = () => {
+
     getTags().then((data) => {
       if (data.error) {
         setValues({ ...values, error: data.error });
@@ -76,67 +67,62 @@ const CreateBlog = ({ router }) => {
     });
   };
 
+  const validate = () => {
+    data.body.length < 200 &&
+      setValidation({
+        success: null,
+        error: "Content Too short Please increase the content Length",
+      });
+    data.title.length < 10 &&
+      setValidation({
+        success: null,
+        error: "The title should be at least 10 characters",
+      });
+    data.categories.length === 0 &&
+      setValidation({
+        success: null,
+        error: "At least One Categories should be selected",
+      });
+    data.tags.length === 0 &&
+      setValidation({
+        success: null,
+        error: "At least One Tags should be selected",
+      });
+  };
+
   const publishBlog = (e) => {
     e.preventDefault();
-    createBlog(formData, token).then((data) => {
+    validate();
+    //**TODO VALIDATION */
+    console.log(validation.error);
+    !validation.error && console.log("executed");
+    createBlog(data, token).then((data) => {
       console.log(data.error);
       if (data.error) {
-        setValues({ ...values, error: data.error });
+        setValidation({ success: "null", error: data.error });
       } else {
-        setValues({
-          ...values,
-          title: "",
-          error: "",
-          success: `A new Blog titled "${data.title}" is created`,
-        });
-        setBody("");
-        setChecked([]);
-        setCheckedTag([]);
+        alert("done");
       }
     });
   };
 
-  const handleChange = (e, name) => {
-    const value = name === "photo" ? e.target.files[0] : e.target.value;
-    formData.set(name, value);
-    setValues({ ...values, [name]: value, formData, error: "" });
-  };
-  const handleBody = (e) => {
-    setBody(e);
-    formData.set("body", e);
-    if (typeof window !== undefined) {
-      localStorage.setItem(BlogLocal, JSON.stringify(e));
-    }
+  const handleChange = (value, name) => {
+    setData({ ...data, [name]: value });
+
+    name === "body" &&
+      typeof window !== undefined &&
+      localStorage.setItem(BlogLocal, JSON.stringify(value));
   };
 
-  const handleToggle = (c) => {
-    setValues({ ...values, error: "" });
-    const clickedCategory = checked.indexOf(c);
-    const all = [...checked];
-
-    if (clickedCategory === -1) {
-      all.push(c);
-    } else {
-      all.splice(clickedCategory, 1);
-    }
-    console.log(all);
-    setChecked(all);
-    formData.set("categories", all);
+  const handleToggle = (checked, type) => {
+    const index = data[type].indexOf(checked);
+    const alreadyChecked = [...data[type]];
+    index === -1
+      ? alreadyChecked.push(checked)
+      : alreadyChecked.splice(index, 1);
+    setData({ ...data, [type]: alreadyChecked });
   };
-  const handleToggleTag = (t) => {
-    setValues({ ...values, error: "" });
-    const clickedTag = checkedTag.indexOf(t);
-    const all = [...checkedTag];
 
-    if (clickedTag === -1) {
-      all.push(t);
-    } else {
-      all.splice(clickedTag, 1);
-    }
-    console.log(all);
-    setCheckedTag(all);
-    formData.set("tags", all);
-  };
   const showCategories = () => {
     return (
       categories &&
@@ -145,8 +131,8 @@ const CreateBlog = ({ router }) => {
           <input
             className="mr-2"
             type="checkbox"
-            checked={checked.indexOf(c._id) !== -1}
-            onChange={() => handleToggle(c._id)}
+            checked={data.categories.indexOf(c._id) !== -1}
+            onChange={() => handleToggle(c._id, "categories")}
           />
           <label className="form-check-label">{c.name}</label>
         </li>
@@ -161,8 +147,8 @@ const CreateBlog = ({ router }) => {
           <input
             className="mr-2"
             type="checkbox"
-            checked={checkedTag.indexOf(t._id) !== -1}
-            onChange={() => handleToggleTag(t._id)}
+            checked={data.tags.indexOf(t._id) !== -1}
+            onChange={() => handleToggle(t._id, "tags")}
           />
           <label className="form-check-label">{t.name}</label>
         </li>
@@ -173,17 +159,17 @@ const CreateBlog = ({ router }) => {
   const showError = () => (
     <div
       className="alert alert-danger"
-      style={{ display: error ? "" : "none" }}
+      style={{ display: validation.error ? "" : "none" }}
     >
-      {error}
+      {validation.error}
     </div>
   );
   const showSuccess = () => (
     <div
       className="alert alert-success"
-      style={{ display: success ? "" : "none" }}
+      style={{ display: validation.success ? "" : "none" }}
     >
-      {success}
+      {validation.success}
     </div>
   );
   const createBlogForm = () => {
@@ -193,17 +179,29 @@ const CreateBlog = ({ router }) => {
           <label className="text-muted">Title</label>
           <input
             className="form-control"
-            value={title}
-            onChange={(e) => handleChange(e, "title")}
+            value={data.title}
+            onChange={(e) => handleChange(e.currentTarget.value, "title")}
           />
         </div>
         <div className="form-group">
           <ReactQuill
-            value={body}
+            value={data.body}
             modules={QuillModules}
             formats={QuillFormats}
             placeholder="Write your post"
-            onChange={handleBody}
+            onChange={(e) => handleChange(e, "body")}
+          />
+        </div>
+
+        <div className="form-group border-left-custom">
+          <ReactQuill
+            value={data.excerpt}
+            theme="bubble"
+            modules={QuillModules}
+            formats={QuillFormats}
+            placeholder="Summarize the content as Excerpt"
+            onChangeSelection={() => console.log("changed selec")}
+            onChange={(e) => handleChange(e, "excerpt")}
           />
         </div>
         <div>
@@ -217,27 +215,36 @@ const CreateBlog = ({ router }) => {
   return (
     <div className="container-fluid pb-5">
       <div className="row">
-        <div className="col-md-8">
+        <div>
           {createBlogForm()}
           <div className="pt-3">
             {showError()}
             {showSuccess()}
           </div>
         </div>
-        <div className="col-md-4">
+        <div>
           <div className="form-group pb-4">
             <h5>Featured Image</h5>
             <hr />
             <small className="text-muted">Maximum size: 1Mb</small>
             <br />
+            {data.photo && (
+              <img
+                src={URL.createObjectURL(data.photo)}
+                alt="featured Photo"
+                style={{ maxWidth: "100%", maxHeight: "100%" }}
+              />
+            )}
             <label className="btn btn-outline-info">
               Upload Featured Image
               <input
                 type="file"
                 accept="image/*"
-                onChange={(e) => handleChange(e, "photo")}
+                onChange={(e) =>
+                  handleChange(e.currentTarget.files[0], "photo")
+                }
                 hidden
-              ></input>
+              />
             </label>
           </div>
           <div>

@@ -1,10 +1,12 @@
 import Header from "../Header";
+import Footer from "../Footer";
+
 const Layout = ({ children }) => {
   return (
     <React.Fragment>
       <Header />
-      {children}
-      <p>footer</p>
+      <div className="container container-custom mt-4">{children}</div>
+      <Footer />
     </React.Fragment>
   );
 };

@@ -21,12 +21,11 @@ const signin = ({ router }) => {
   return (
     <Layout>
       <div className="container-fluid">
-        <h2 className="text-center pt-4 pb-4">Sign In</h2>
         <div className="row">
           <div className="col-md-6 offset-md-3">{showRedirectMessage()}</div>
         </div>
         <div className="row">
-          <div className="col-md-6 offset-md-3 ">
+          <div className="col-md-12 ">
             <SignInComponent />
           </div>
         </div>

@@ -9,5 +9,7 @@ module.exports = {
     domain_development: "http://localhost:3000",
     domain_production: "https://letssee.com",
     DISQUS_SHORTNAME: "multiblog-platform",
+    FB_APP_ID: "2559139504303013",
+    GA_TRACKING_ID: "UA-165998411-1",
   },
 };

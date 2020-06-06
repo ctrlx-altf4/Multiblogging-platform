@@ -3,6 +3,7 @@ import Link from "next/link";
 import { API } from "../../config";
 
 import { listSearch } from "../../actions/blog";
+import { FaSearch } from "react-icons/fa";
 
 const Search = () => {
   const [values, setValues] = useState({
@@ -20,13 +21,12 @@ const Search = () => {
         ...values,
         results: data,
         searched: true,
-        message: `${data.length} blogs found`,
+        message: `${data & data.length} blogs found`,
       });
     });
   };
   const handleChange = (e) => {
     //**Todo e.currentTarget   */
-    console.log(search);
     setValues({
       ...values,
       search: e.currentTarget.value,
@@ -73,14 +73,29 @@ const Search = () => {
   );
 
   return (
-    <div className="container-fluid">
-      <div className="pt-3 pb-5">{SearchForm()}</div>
+    <form onSubmit={searchSubmit}>
+      <div class="container h-100">
+        <div class="d-flex justify-content-center h-100">
+          <div class="searchbar">
+            <input
+              class="search_input"
+              type="text"
+              name=""
+              placeholder="Search..."
+              onChange={handleChange}
+            />
+            <a href="#" class="search_icon">
+              <FaSearch onClick={searchSubmit} />
+            </a>
+          </div>
+        </div>
+      </div>
       {searched && (
         <div style={{ marginTop: -120, marginBottom: -80 }}>
           {searchedBlogs(results)}
         </div>
       )}
-    </div>
+    </form>
   );
 };
 

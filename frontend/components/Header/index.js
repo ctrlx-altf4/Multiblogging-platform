@@ -8,12 +8,14 @@ import {
   NavItem,
   NavLink,
   NavbarText,
+  Container,
 } from "reactstrap";
-import { APP_NAME } from "../../config";
+
 import Link from "next/link";
 import Router from "next/router";
 import NProgress from "nprogress";
 
+import { FaPhoneAlt, FaEnvelope, FaEdit } from "react-icons/fa";
 import Search from "../blog/Search";
 
 //actions
@@ -29,74 +31,98 @@ const Header = (props) => {
   const toggle = () => setIsOpen(!isOpen);
   return (
     <React.Fragment>
-      <Navbar color="light" light expand="md">
-        <Link href="/">
-          <NavLink className="font-weight-bold">{APP_NAME}</NavLink>
-        </Link>
-        <NavbarToggler onClick={toggle} />
-        <Collapse isOpen={isOpen} navbar>
-          <Nav className="mr-auto" navbar>
-            <NavItem>
-              <Link href="/blogs">
-                <NavLink>Blogs</NavLink>
-              </Link>
-            </NavItem>
+      <div className="top-header clearfix" style={{ padding: ".5rem" }}>
+        <div className="container container-custom">
+          <div className="text-white float-left">
+            Questions?
+            <a className="text-light" href="tel:9844697839">
+              <FaPhoneAlt className="icon-custom" /> 9844697839
+            </a>
+          </div>
 
-            <NavItem>
-              <Link href="/contact">
-                <NavLink>Contact</NavLink>
-              </Link>
-            </NavItem>
-            {isAuth() && isAuth().role === 0 && (
+          <div className="float-right">
+            <a className="text-light" href="tel:9844697839">
+              <FaEnvelope className="icon-custom" /> ctrlx.altf4@gmail.com
+            </a>
+          </div>
+        </div>
+      </div>
+
+      <Navbar color="light" light expand="md">
+        <div className="container container-custom">
+          <Link href="/">
+            <NavLink className="font-weight-bold pl-0">LOGO HERE</NavLink>
+          </Link>
+          <NavbarToggler onClick={toggle} />
+          <Collapse isOpen={isOpen} navbar>
+            <Nav className="mr-auto" navbar>
               <NavItem>
-                <Link href="/user">
-                  <NavLink>{isAuth().name}</NavLink>
+                <Link href="/blogs">
+                  <NavLink className="text-dark">Blogs</NavLink>
                 </Link>
               </NavItem>
-            )}
-            {isAuth() && isAuth().role === 1 && (
+
               <NavItem>
-                <Link href="/admin">
-                  <NavLink>{isAuth().name}</NavLink>
+                <Link href="/contact">
+                  <NavLink className="text-dark">Contact</NavLink>
                 </Link>
               </NavItem>
-            )}
-            {isAuth() && (
-              <React.Fragment>
-                <NavItem>
-                  <NavLink
-                    onClick={() =>
-                      signOutAction(() => Router.replace("/signin"))
-                    }
-                  >
-                    Sign Out
+
+              <NavItem>
+                <Link href="/user/crud/blog">
+                  <NavLink className="btn btn-primary text-light">
+                    <FaEdit className="icon-custom" />
+                    Write a Blog
                   </NavLink>
-                </NavItem>
-              </React.Fragment>
-            )}
-            {!isAuth() && (
-              <React.Fragment>
+                </Link>
+              </NavItem>
+            </Nav>
+            <Nav>
+              {isAuth() && isAuth().role === 0 && (
                 <NavItem>
-                  <Link href="/signin">
-                    <NavLink>Sign In</NavLink>
+                  <Link href="/user">
+                    <NavLink className="text-dark">{isAuth().name}</NavLink>
                   </Link>
                 </NavItem>
+              )}
+              {isAuth() && isAuth().role === 1 && (
                 <NavItem>
-                  <Link href="/signup">
-                    <NavLink>Sign Up</NavLink>
+                  <Link href="/admin">
+                    <NavLink className="text-dark">{isAuth().name}</NavLink>
                   </Link>
                 </NavItem>
-              </React.Fragment>
-            )}
-            <NavItem>
-              <Link href="/user/crud/blog">
-                <NavLink className="btn btn-primary text-light">
-                  Write a Blog
-                </NavLink>
-              </Link>
-            </NavItem>
-          </Nav>
-        </Collapse>
+              )}
+              {isAuth() && (
+                <React.Fragment>
+                  <NavItem>
+                    <NavLink
+                      className="text-dark"
+                      onClick={() =>
+                        signOutAction(() => Router.replace("/signin"))
+                      }
+                    >
+                      Sign Out
+                    </NavLink>
+                  </NavItem>
+                </React.Fragment>
+              )}
+              {!isAuth() && (
+                <React.Fragment>
+                  <NavItem>
+                    <Link href="/signin">
+                      <NavLink className="text-dark">Sign In</NavLink>
+                    </Link>
+                  </NavItem>
+                  <NavItem>
+                    <Link href="/signup">
+                      <NavLink className="text-dark">Sign Up</NavLink>
+                    </Link>
+                  </NavItem>
+                </React.Fragment>
+              )}
+            </Nav>
+          </Collapse>
+        </div>
       </Navbar>
       <Search />
     </React.Fragment>

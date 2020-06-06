@@ -1,0 +1,55 @@
+.sidebar {
+  background: #1e2229;
+  height: 100vh;
+  width: 260px;
+  position: sticky;
+  top: 0px;
+  &-content {
+    max-height: calc(100% - 30px);
+    height: calc(100% - 30px);
+    overflow-y: auto;
+    position: relative;
+  }
+  &-brand {
+    color: white;
+    padding: 10px 20px;
+    display: flex;
+    align-items: center;
+  }
+  &-header {
+    padding: 20px;
+    overflow: hidden;
+
+    .user-pic {
+      float: left;
+      width: 60px;
+      padding: 2px;
+      border-radius: 12px;
+      margin-right: 15px;
+      overflow: hidden;
+      img {
+        object-fit: cover;
+        height: 100%;
+        width: 100%;
+      }
+    }
+    .user-info {
+      float: left;
+      & > span {
+        display: block;
+      }
+      .user-role {
+        font-size: 12px;
+      }
+      .user-status {
+        font-size: 11px;
+        margin-top: 4px;
+        div {
+          font-size: 8px;
+          margin-right: 4px;
+          color: #5cb85c;
+        }
+      }
+    }
+  }
+}

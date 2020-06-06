@@ -1,34 +1,21 @@
-import Head from "next/head";
 import Link from "next/link";
 import Layout from "../../components/Layout";
 import { userPublicProfile } from "../../actions/user";
 import { API, DOMAIN, APP_NAME } from "../../config";
 import moment from "moment";
-import ContactForm from " ../../components/form/ContactForm";
+
+import ContactForm from "../../components/form/ContactForm";
+import Card from "../../components/blog/Card";
+
+import SeoHead from "../../components/SeoHead";
 //**Todo Check profile link Last maa username k xa? by creating a new user */
 const UserProfile = ({ user, blogs, query }) => {
-  const head = () => (
-    <Head>
-      <title>
-        {user.name} | {APP_NAME}
-      </title>
-      <meta name="description" content={`Blogs by ${user.username}`} />
-      <meta name="canonical" href={`${DOMAIN}/profile/${query.username}`} />
-      <meta property="og:title" content={`${user.username} | ${APP_NAME}`} />
-      <meta property="og:description" content={`Blogs by ${user.username}`} />
-      <meta property="og:type" content="website" />
-      <meta property="og:url" content={`${DOMAIN}/profile/${query.username}`} />
-      <meta property="og:site_name" content={`${APP_NAME}`} />
-      {/* 
-          <meta property="og:image" content ={`${API}/blog/photo/${blog.slug}`}/>
-          <meta property="og:image:secure_url" content ={`${API}/blog/photo/${blog.slug}`}/>
-          <meta property="og:image:type" content ="image/jpg"/>
-          <meta property="fb:app_id" content ={`${FB_APP_ID}`}/> */}
-    </Head>
-  );
   const showUserBlogs = () => {
     return blogs.map((blog, i) => {
       return (
+        // <article key={i}>
+        //   <Card blog={blog} />
+        // </article>
         <div className="mt-4 mb-4" key={i}>
           <Link href={`/blogs/${blog.slug}`}>
             <a className="Lead">{blog.title}</a>
@@ -37,9 +24,14 @@ const UserProfile = ({ user, blogs, query }) => {
       );
     });
   };
+
   return (
     <React.Fragment>
-      {head()}
+      <SeoHead
+        descContent={`Blogs by ${user.username}`}
+        url={`/profile/${query.username}`}
+        ogTitle={user.username}
+      />
       <Layout>
         <div className="container">
           <div className="row">
@@ -72,7 +64,7 @@ const UserProfile = ({ user, blogs, query }) => {
         <br />
         <div className="container pb-5">
           <div className="row">
-            <div className="col-md-6">
+            <div className="col-md-12">
               <div className="card">
                 <div className="card-body">
                   <h5 className="card-title bg-primary  pt-4 pb-4 pl-4 pr-4 text-light">
@@ -82,7 +74,7 @@ const UserProfile = ({ user, blogs, query }) => {
                 </div>
               </div>
             </div>
-            <div className="col-md-6">
+            <div className="col-md-12">
               <div className="card">
                 <div className="card-body">
                   <h5 className="card-title bg-primary  pt-4 pb-4 pl-4 pr-4 text-light">

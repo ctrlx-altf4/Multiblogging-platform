@@ -3,23 +3,22 @@ sgMail.setApiKey(process.env.SENDGRID_API_KEY);
 
 exports.contactForm = (req, res) => {
   const { email, name, message } = req.body;
-
   const msg = {
     to: process.env.EMAIL_TO,
     from: email,
     subject: `Contact Form  -${process.env.APP_NAME}`,
     text: `Email received from contact from \n Sender name: ${name}\n Sender Email: ${email}\n Sender Message:${message}`,
     html: `
-          <h4> Email Received from contact : </h4>
-          <p> Sender name: ${name}</p>
-          <p> Sender email: ${email}</p>
-          <p>Sender message: ${message}</p>
-          <hr/>
-          <p> This email may contain sensitive information </p>
-          <p>https://something.com.np</p>
-      `,
+    <h4> Email Received from contact : </h4>
+    <p> Sender name: ${name}</p>
+    <p> Sender email: ${email}</p>
+    <p>Sender message: ${message}</p>
+    <hr/>
+    <p> This email may contain sensitive information </p>
+    <p>https://something.com.np</p>
+    `,
   };
-
+  console.log(msg);
   (async () => {
     try {
       await sgMail.send(msg);

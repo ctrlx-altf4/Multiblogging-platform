@@ -1,0 +1,73 @@
+@import "../variables.scss";
+
+.top-header {
+  background: $DARK_COLOR;
+  font-size: 12px;
+}
+.navbar {
+  font-family: "Bebas Neue", cursive;
+  color: black;
+  font-size: 20px;
+}
+.nav-link {
+  color: black;
+  &:hover {
+    cursor: pointer;
+    text-decoration: overline underline !important;
+    text-underline-offset: 8px !important;
+  }
+}
+
+//searchbar
+.searchbar {
+  position: fixed;
+  left: 0px;
+  z-index: 999;
+  cursor: pointer;
+  border-radius: 0px 16px 16px 0px;
+  padding: 2px;
+  background: $DARK_COLOR;
+  opacity: 0.5;
+  &:hover {
+    opacity: 1;
+  }
+}
+
+.search_input {
+  color: white;
+  border: 0;
+  outline: 0;
+  background: none;
+  width: 0;
+  caret-color: white;
+  line-height: 40px;
+  transition: width 0.4s linear;
+  &::placeholder {
+    color: white;
+  }
+}
+
+.searchbar:hover > .search_input {
+  padding: 0 10px;
+  width: 450px;
+  caret-color: white;
+
+  transition: width 0.4s linear;
+}
+
+.searchbar:hover > .search_icon {
+  background: white;
+  color: $DARK_COLOR;
+}
+
+.search_icon {
+  height: 40px;
+  width: 40px;
+  float: left;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 0px 16px 16px 0px;
+  color: white;
+  text-decoration: none;
+}

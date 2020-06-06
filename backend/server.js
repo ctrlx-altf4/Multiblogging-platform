@@ -14,6 +14,7 @@ const userRoutes = require("./routes/user");
 const categoryRoutes = require("./routes/category");
 const tagsRoutes = require("./routes/tags");
 const formRoutes = require("./routes/form");
+const filesRoutes = require("./routes/files");
 
 //app
 const app = express();
@@ -44,7 +45,10 @@ app.use("/api", userRoutes);
 app.use("/api", categoryRoutes);
 app.use("/api", tagsRoutes);
 app.use("/api", formRoutes);
+app.use("/api", filesRoutes);
 
+//serving static folders
+app.use(express.static("./public"));
 //port
 const port = process.env.PORT || 8000;
 app.listen(port, () => {

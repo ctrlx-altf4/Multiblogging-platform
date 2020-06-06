@@ -1,17 +1,17 @@
 import Link from "next/link";
 import moment from "moment";
-import { API } from "../../config";
+import { API, SERVER } from "../../config";
 
 const RelatedCard = ({ blog }) => {
   return (
     <div className="card">
-      <section>
+      <section className="img-hover-parent">
         <Link href={`/blogs/${blog.slug}`}>
           <a>
             <img
-              className="img img-fluid"
-              style={{ maxHeight: "250", width: "100%" }}
-              src={`${API}/blog/photo/${blog.slug}`}
+              className="img img-fluid img-hover"
+              style={{ maxHeight: "250px", width: "100%" }}
+              src={`${SERVER}/featured/${blog.photo}`}
               alt={blog.title}
             />
           </a>

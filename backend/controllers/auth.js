@@ -2,6 +2,10 @@ const User = require("../models/user");
 const jwt = require("jsonwebtoken");
 const expressJwt = require("express-jwt");
 const shortId = require("shortid");
+const _ = require("lodash");
+//sendgrid setup
+const sgMail = require("@sendgrid/mail");
+sgMail.setApiKey(process.env.SENDGRID_API_KEY);
 
 exports.signup = (req, res) => {
   const { name, email, password } = req.body;
@@ -92,4 +96,96 @@ exports.adminMiddleware = (req, res, next) => {
     req.profile = user;
     next();
   });
+};
+exports.forgotPassword = (req, res) => {
+  const { email } = req.body;
+  User.findOne({ email }, (err, user) => {
+    if (err || !user) {
+      return res.status(401).json({
+        error: "user with that email doesn't exists",
+      });
+    }
+    const token = jwt.sign({ _id: user._id }, process.env.JWT_RESET_SECRET, {
+      expiresIn: "10m",
+    });
+
+    const msg = {
+      from: process.env.EMAIL_FROM,
+      to: email,
+      subject: `Password Reset Link`,
+      html: `
+      <h4> Please use the following link to reset your password : </h4>
+      <p>${process.env.CLIENT_URL}/auth/password/reset/${token}</p> 
+      <hr/>
+      <p> This email may contain sensitive information </p>
+      <p>${process.env.CLIENT_URL}</p>
+      `,
+    };
+
+    return User.updateOne(
+      { $set: { resetPasswordLink: token } },
+      (err, success) => {
+        if (err) {
+          return res.json({ error: errorHandler(err) });
+        } else {
+          (async () => {
+            try {
+              await sgMail.send(msg).then((sent) => {
+                return res.json({
+                  message: `Email has been sent to ${email}. Follow the instruction to reset your Password. Link expires in 10 minute`,
+                });
+              });
+            } catch (error) {
+              console.error(error);
+
+              if (error.response) {
+                console.error(error.response.body);
+              }
+              return res.status(401).json({
+                error: "Error While sending email. Please Try again",
+              });
+            }
+          })();
+        }
+      }
+    );
+  });
+};
+exports.resetPassword = (req, res) => {
+  const { resetPasswordLink, newPassword } = req.body;
+  if (resetPasswordLink) {
+    jwt.verify(
+      resetPasswordLink,
+      process.env.JWT_RESET_SECRET,
+      (err, decoded) => {
+        if (err) {
+          return res.status(401).json({
+            error: "Expired Link Try Again",
+          });
+        }
+        User.findOne({ resetPasswordLink }, (err, user) => {
+          if (err) {
+            return res.status(401).json({
+              error: errorHandler(err),
+            });
+          }
+          const updatedFields = {
+            password: newPassword,
+            resetPasswordLink: "",
+          };
+          user = _.extend(user, updatedFields);
+          user.save((err, success) => {
+            if (err || !user) {
+              return res.status(401).json({
+                error: errorHandler(err),
+              });
+            }
+            res.json({
+              message: `Great Now! You can login with new Password`,
+            });
+          });
+        });
+      }
+    );
+  }
 };

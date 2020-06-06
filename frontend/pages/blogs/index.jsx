@@ -61,9 +61,6 @@ const Blogs = ({
     });
   };
   const loadMoreBtn = () => {
-    console.log(`size=${size}`);
-    console.log(`limit=${limit}`);
-    console.log(`skip=${skip}`);
     return (
       size > 0 &&
       size >= limit && (
@@ -76,31 +73,13 @@ const Blogs = ({
   const showAllBlogs = () => {
     return blogs.map((blog, i) => {
       return (
-        <article key={i}>
+        <article key={i} className="mb-4">
           <Card blog={blog} />
-          <hr />
         </article>
       );
     });
   };
-  const showAllCategories = () => {
-    return categories.map((c, i) => {
-      return (
-        <Link href={`/categories/${c.slug}`} key={i}>
-          <a className="btn btn-primary mr-1 ml-1 mt-3">{c.name}</a>
-        </Link>
-      );
-    });
-  };
-  const showAllTags = () => {
-    return tags.map((t, i) => {
-      return (
-        <Link href={`/tags/${t.slug}`} key={i}>
-          <a className="btn btn-outline-primary mr-1 ml-1 mt-3">{t.name}</a>
-        </Link>
-      );
-    });
-  };
+
   const showLoadedBlogs = () => {
     return loadedBlogs.map((blog, i) => (
       <article key={i}>
@@ -113,25 +92,51 @@ const Blogs = ({
       {SeoHeader()}
       <Layout>
         <main>
-          <div className="container-fluid">
-            <header>
-              <div className="col-md-12 pt-3">
-                <h1 className="display-4 font-weight-bold text-center">
-                  Programming Blogs
-                </h1>
+          <div className="row">
+            <div className="col-md-8">
+              <div className="container-fluid">{showAllBlogs()}</div>
+              <div className="container-fluid">{showLoadedBlogs()}</div>
+              <div className="text-center pt-5 pb-5">{loadMoreBtn()}</div>
+            </div>
+            <div className="col-md-4">
+              <div className="row">
+                <h3 className="h3 font-header border-left-custom">
+                  Trending This Week
+                </h3>
+                <br />
+                Trending Cards Content here
+                <br />
+                aksjdflajs;ldfj
+                <br />
+                aksdfjlkasj;dfk
+                <br />
+                asldfjljs; a<br />
+                aklsldjflkjas;ljfd;lkajs;kldfj;
+                <br />
+                lasjfa;sjdfkjaks;jf;klajs;klfdj
+                <br />
+                ;laksjf;klj;skdjfklaj
+                <br />
               </div>
-              <section>
-                <div className="pb-5 text-center">
-                  {showAllCategories()}
-                  <br />
-                  {showAllTags()}
-                </div>
-              </section>
-            </header>
+              <div className="row mt-5">
+                <h3 className="h3 font-header border-left-custom">
+                  Admins Choice
+                </h3>
+                Admins Choice Cards Content here
+                <br />
+                aksjdflajs;ldfj
+                <br />
+                aksdfjlkasj;dfk
+                <br />
+                asldfjljs; a<br />
+                aklsldjflkjas;ljfd;lkajs;kldfj;
+                <br />
+                lasjfa;sjdfkjaks;jf;klajs;klfdj
+                <br />
+                ;laksjf;klj;skdjfklaj
+              </div>
+            </div>
           </div>
-          <div className="container-fluid">{showAllBlogs()}</div>
-          <div className="container-fluid">{showLoadedBlogs()}</div>
-          <div className="text-center pt-5 pb-5">{loadMoreBtn()}</div>
         </main>
       </Layout>
     </React.Fragment>

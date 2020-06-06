@@ -7,7 +7,7 @@ import { getCategories } from "../../actions/category";
 import { getTags } from "../../actions/tag";
 import { singleBlog, updateBlog } from "../../actions/blog";
 
-import { API } from "../../config";
+import { API, SERVER } from "../../config";
 
 const ReactQuill = dynamic(() => import("react-quill"), { ssr: false });
 
@@ -16,45 +16,62 @@ const BlogLocal = "blog_CtrlxAltf4";
 const cookieToken = "MultiBlogToken_ctrlxAltf4"; //cookie key
 
 const BlogUpdate = ({ router }) => {
-  const [body, setBody] = useState("");
-  const [values, setValues] = useState({
-    error: "",
-    success: "",
-    formData: "",
+  const [data, setData] = useState({
     title: "",
+    body: "",
+    excerpt: "",
+    photo: null,
+    categories: [],
+    tags: [],
   });
-  const { error, success, formData, title } = values;
+  const [originalData, setOriginalData] = useState({});
   const [categories, setCategories] = useState([]);
   const [tags, setTags] = useState([]);
 
+  const [values, setValues] = useState({
+    error: "",
+    success: "",
+  });
+  const { error, success } = values;
+
   const token = getCookie(cookieToken);
-  const [checked, setChecked] = useState([]);
-  const [checkedTag, setCheckedTag] = useState([]);
+  let x;
   useEffect(() => {
-    setValues({ ...values, formData: new FormData() });
     initBlog();
-    initCategories();
-    initTags();
+    init();
   }, [router]);
 
   const initBlog = () => {
     if (router.query.slug)
-      singleBlog(router.query.slug).then((data) => {
-        if (data.error) {
-          console.log(data.error);
+      singleBlog(router.query.slug).then((res) => {
+        if (res.error) {
+          console.log(res.error);
         } else {
-          setValues({ ...values, title: data.title });
-          setBody(data.body);
+          setValues({ ...values, title: res.title });
           let ca = [];
           let ta = [];
-          data.categories.map((cat, i) => ca.push(cat._id));
-          data.tags.map((tag, i) => ta.push(tag._id));
-          setChecked(ca);
-          setCheckedTag(ta);
+          res.categories.map((cat, i) => ca.push(cat._id));
+          res.tags.map((tag, i) => ta.push(tag._id));
+
+          res.tags = ta;
+          res.categories = ca;
+          res.photo = res.photo[0];
+
+          setOriginalData(res);
+
+          setData({
+            title: res.title,
+            body: res.body,
+            categories: res.categories,
+            tags: res.tags,
+            excerpt: res.excerpt,
+            photo: res.photo,
+          });
         }
       });
   };
-  const initCategories = () => {
+
+  const init = () => {
     getCategories().then((data) => {
       if (data.error) {
         setValues({ ...values, error: data.error });
@@ -62,8 +79,6 @@ const BlogUpdate = ({ router }) => {
         setCategories(data);
       }
     });
-  };
-  const initTags = () => {
     getTags().then((data) => {
       if (data.error) {
         setValues({ ...values, error: data.error });
@@ -72,63 +87,51 @@ const BlogUpdate = ({ router }) => {
       }
     });
   };
-  const handleChange = (e, name) => {
-    const value = name === "photo" ? e.target.files[0] : e.target.value;
-    formData.set(name, value);
-    setValues({ ...values, [name]: value, formData, error: "" });
-  };
-  const handleBody = (e) => {
-    setBody(e);
-    formData.set("body", e);
+
+  const handleChange = (value, name) => {
+    setData({ ...data, [name]: value });
+
+    name === "body" &&
+      typeof window !== undefined &&
+      localStorage.setItem(BlogLocal, JSON.stringify(value));
   };
 
   const editBlog = (e) => {
     e.preventDefault();
 
-    updateBlog(formData, token, router.query.slug).then((data) => {
-      if (data.error) {
-        setValues({ ...values, error: data.error });
-      } else {
-        setValues({
-          ...values,
-          title: "",
-          success: `Blog titled "${data.title}" is successfully updated`,
-        });
-        if (isAuth() && isAuth().role === 1) {
-          Router.replace(`/admin/crud/${router.query.slug}`);
-        } else if (isAuth() && isAuth().role === 0) {
-          Router.replace(`/user/crud/${router.query.slug}`);
-        }
-      }
-    });
+    console.log(data);
+    console.log(originalData);
+    const updated = Object.fromEntries(
+      Object.entries(data).filter((each) => each[1] !== originalData[each[0]])
+    );
+    updateBlog(updated, token, router.query.slug);
+    // .then((res) => {
+    //   if (res.error) {
+    //     setValues({ ...values, error: res.error });
+    //   } else {
+    //     setValues({
+    //       ...values,
+    //       title: "",
+    //       success: `Blog titled "${res.title}" is successfully updated`,
+    //     });
+    //     if (isAuth() && isAuth().role === 1) {
+    //       Router.replace(`/admin/crud/${router.query.slug}`);
+    //     } else if (isAuth() && isAuth().role === 0) {
+    //       Router.replace(`/user/crud/${router.query.slug}`);
+    //     }
+    //   }
+    // });
   };
-  const handleToggle = (c) => {
-    setValues({ ...values, error: "" });
-    const clickedCategory = checked.indexOf(c);
-    const all = [...checked];
 
-    if (clickedCategory === -1) {
-      all.push(c);
-    } else {
-      all.splice(clickedCategory, 1);
-    }
-    console.log(all);
-    setChecked(all);
-    formData.set("categories", all);
+  const handleToggle = (checked, type) => {
+    const index = data[type].indexOf(checked);
+    const alreadyChecked = [...data[type]];
+    index === -1
+      ? alreadyChecked.push(checked)
+      : alreadyChecked.splice(index, 1);
+    setData({ ...data, [type]: alreadyChecked });
   };
-  const handleToggleTag = (t) => {
-    setValues({ ...values, error: "" });
-    const clickedTag = checkedTag.indexOf(t);
-    const all = [...checkedTag];
 
-    if (clickedTag === -1) {
-      all.push(t);
-    } else {
-      all.splice(clickedTag, 1);
-    }
-    setCheckedTag(all);
-    formData.set("tags", all);
-  };
   const updateBlogForm = () => {
     return (
       <form onSubmit={editBlog}>
@@ -136,18 +139,33 @@ const BlogUpdate = ({ router }) => {
           <label className="text-muted">Title</label>
           <input
             className="form-control"
-            value={title}
-            onChange={(e) => handleChange(e, "title")}
+            value={data.title}
+            onChange={(e) => handleChange(e.currentTarget.value, "title")}
           />
         </div>
         <div className="form-group">
-          <ReactQuill
-            value={body}
-            modules={QuillModules}
-            formats={QuillFormats}
-            placeholder="Write your post"
-            onChange={handleBody}
-          />
+          {data.body && (
+            <ReactQuill
+              value={data.body}
+              modules={QuillModules}
+              formats={QuillFormats}
+              placeholder="Write your post"
+              onChange={(e) => handleChange(e, "body")}
+            />
+          )}
+        </div>
+
+        <div className="form-group border-left-custom">
+          {data.excerpt && (
+            <ReactQuill
+              value={data.excerpt}
+              theme="bubble"
+              modules={QuillModules}
+              formats={QuillFormats}
+              placeholder="Summarize the content as Excerpt"
+              onChange={(e) => handleChange(e, "excerpt")}
+            />
+          )}
         </div>
         <div>
           <button type="submit" className="btn btn-primary">
@@ -165,8 +183,8 @@ const BlogUpdate = ({ router }) => {
           <input
             className="mr-2"
             type="checkbox"
-            checked={checked.indexOf(c._id) !== -1}
-            onChange={() => handleToggle(c._id)}
+            checked={data.categories.indexOf(c._id) !== -1}
+            onChange={() => handleToggle(c._id, "categories")}
           />
           <label className="form-check-label">{c.name}</label>
         </li>
@@ -181,8 +199,8 @@ const BlogUpdate = ({ router }) => {
           <input
             className="mr-2"
             type="checkbox"
-            checked={checkedTag.indexOf(t._id) !== -1}
-            onChange={() => handleToggleTag(t._id)}
+            checked={data.tags.indexOf(t._id) !== -1}
+            onChange={() => handleToggle(t._id, "tags")}
           />
           <label className="form-check-label">{t.name}</label>
         </li>
@@ -215,13 +233,6 @@ const BlogUpdate = ({ router }) => {
             {showError()}
             {showSuccess()}
           </div>
-          {body && (
-            <img
-              src={`${API}/blog/photo/${router.query.slug}`}
-              wdth="100%"
-              alt={title}
-            />
-          )}
         </div>
         <div className="col-md-4">
           <div className="form-group pb-4">
@@ -229,12 +240,25 @@ const BlogUpdate = ({ router }) => {
             <hr />
             <small className="text-muted">Maximum size: 1Mb</small>
             <br />
+            {data.photo && (
+              <img
+                src={
+                  typeof data.photo === "string"
+                    ? `${SERVER}/featured/${data.photo}`
+                    : URL.createObjectURL(data.photo)
+                }
+                alt={data.title}
+                style={{ maxWidth: "100%", maxHeight: "100%" }}
+              />
+            )}
             <label className="btn btn-outline-info">
               Upload Featured Image
               <input
                 type="file"
                 accept="image/*"
-                onChange={(e) => handleChange(e, "photo")}
+                onChange={(e) =>
+                  handleChange(e.currentTarget.files[0], "photo")
+                }
                 hidden
               ></input>
             </label>

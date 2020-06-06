@@ -1,0 +1,36 @@
+$BRAND_COLOR: blue;
+$DARK_COLOR: #8326d0;
+$BRAND_ACCENT: #31708e;
+$LIGHT_DARK: #95a5a6;
+$CATEGORY_COLOR: #116466;
+$TAGS_COLOR: #f39c12;
+
+$BOX_SHADOW: rgba(0, 0, 0, 0.2);
+
+$ACCENT_COLOR: RED;
+$NEUTRAL_COLOR: GREEN;
+$TEXT_COLOR: WHITE;
+$BTN_MAIN: PURPLE;
+$BTN_MAIN_HOVER: PINK;
+$BTN_MAIN_TEXT: BLUE;
+$BTN_SECONDARY: GREY;
+$BTN_SECONDARY_HOVER: BLACK;
+$BTN_SECONDARY_TEXT: WHITE;
+$SUCCESS: GREEN;
+$ERROR: RED;
+$WARNING: YELLOW;
+$DANGER: #d42620; //
+
+$FACEBOOK_COLOR: #4267b2;
+
+$theme-colors: (
+  "primary": red,
+  "danger": #ff4136,
+);
+$body-bg: #000;
+$body-color: #111;
+
+@mixin cubic-transition {
+  -webkit-transition: all 0.5s cubic-bezier(0.455, 0.03, 0.515, 0.955);
+  transition: all 0.5s cubic-bezier(0.455, 0.03, 0.515, 0.955);
+}
