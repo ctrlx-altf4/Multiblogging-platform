@@ -41,7 +41,7 @@ p {
   font-family: "Playfair Display", serif;
 }
 .author {
-  color: $DARK_COLOR;
+  color: $primary;
   font-size: 1rem;
   text-transform: capitalize;
 }
@@ -79,7 +79,6 @@ p {
 }
 //blogs/index
 .fb-icon {
-  // padding: 4px;
   color: $FACEBOOK_COLOR;
   font-size: 1.4rem;
   cursor: pointer;
@@ -102,5 +101,31 @@ p {
   .container-custom {
     padding-left: 25px;
     padding-right: 25px;
+  }
+}
+
+//TODO  @ctrlx-altf4 EDits
+.ql-editor {
+  min-height: 400px;
+}
+.featured-image {
+  width: 100%;
+  max-height: 500px;
+  object-fit: cover;
+}
+
+.bottom-bar {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  padding: 8px 16px;
+  background: white;
+  z-index: 999;
+  border-radius: 16px 16px 0px 0px;
+  width: 100%;
+  box-shadow: $BOX_SHADOW;
+  // border: 1px solid $light;
+  &__active {
+    color: $primary;
   }
 }

@@ -1,18 +1,22 @@
-$BRAND_COLOR: blue;
-$DARK_COLOR: #8326d0;
-$BRAND_ACCENT: #31708e;
-$LIGHT_DARK: #95a5a6;
-$CATEGORY_COLOR: #116466;
-$TAGS_COLOR: #f39c12;
+/*Todo All the bootstrap overrides here */
+$primary: #8326d0;
+$info: #00e5ff;
+$danger: #ff4136;
+$warning: #ffea00;
+$body-bg: #fafafa;
 
-$BOX_SHADOW: rgba(0, 0, 0, 0.2);
+$BOX_SHADOW: 0 2px 5px #ccc, 0 2px 5px #ccc;
 
+// #00e5ff
+//Aladin font
+// 8326d0;
+// FFEA00
 $ACCENT_COLOR: RED;
 $NEUTRAL_COLOR: GREEN;
 $TEXT_COLOR: WHITE;
 $BTN_MAIN: PURPLE;
 $BTN_MAIN_HOVER: PINK;
-$BTN_MAIN_TEXT: BLUE;
+$BTN_MAIN_TEXT: #00e5ff;
 $BTN_SECONDARY: GREY;
 $BTN_SECONDARY_HOVER: BLACK;
 $BTN_SECONDARY_TEXT: WHITE;
@@ -22,13 +26,6 @@ $WARNING: YELLOW;
 $DANGER: #d42620; //
 
 $FACEBOOK_COLOR: #4267b2;
-
-$theme-colors: (
-  "primary": red,
-  "danger": #ff4136,
-);
-$body-bg: #000;
-$body-color: #111;
 
 @mixin cubic-transition {
   -webkit-transition: all 0.5s cubic-bezier(0.455, 0.03, 0.515, 0.955);

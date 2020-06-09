@@ -28,10 +28,7 @@ class MyDocument extends Document {
             name="viewport"
             content="width=device-width, initial-scale=1.0"
           />
-          <link
-            rel="stylesheet"
-            href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.4.0/css/bootstrap.min.css"
-          />
+          <link rel="stylesheet" href="/styles/custom-bootstrap.scss" />
           <link rel="stylesheet" href="/static/css/styles.css" />
           <link
             href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Playfair+Display&display=swap"

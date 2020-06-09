@@ -31,7 +31,7 @@ const Header = (props) => {
   const toggle = () => setIsOpen(!isOpen);
   return (
     <React.Fragment>
-      <div className="top-header clearfix" style={{ padding: ".5rem" }}>
+      <div className="bg-primary small clearfix" style={{ padding: ".5rem" }}>
         <div className="container container-custom">
           <div className="text-white float-left">
             Questions?
@@ -70,7 +70,10 @@ const Header = (props) => {
 
               <NavItem>
                 <Link href="/user/crud/blog">
-                  <NavLink className="btn btn-primary text-light">
+                  <NavLink
+                    className="btn btn-primary "
+                    style={{ background: "#00e5ff", color: "black" }}
+                  >
                     <FaEdit className="icon-custom" />
                     Write a Blog
                   </NavLink>

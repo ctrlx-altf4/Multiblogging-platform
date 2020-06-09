@@ -1,9 +1,5 @@
 @import "../variables.scss";
 
-.top-header {
-  background: $DARK_COLOR;
-  font-size: 12px;
-}
 .navbar {
   font-family: "Bebas Neue", cursive;
   color: black;
@@ -26,7 +22,7 @@
   cursor: pointer;
   border-radius: 0px 16px 16px 0px;
   padding: 2px;
-  background: $DARK_COLOR;
+  background: $primary;
   opacity: 0.5;
   &:hover {
     opacity: 1;
@@ -57,7 +53,7 @@
 
 .searchbar:hover > .search_icon {
   background: white;
-  color: $DARK_COLOR;
+  color: $primary;
 }
 
 .search_icon {

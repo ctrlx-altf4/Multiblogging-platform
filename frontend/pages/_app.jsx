@@ -2,10 +2,12 @@ import { useEffect } from "react";
 import Router from "next/router";
 
 //styles
-import "./styles/main.scss";
+
 import "../node_modules/nprogress/nprogress.css";
 import "../node_modules/react-quill/dist/quill.bubble.css";
 import "../node_modules/react-quill/dist/quill.snow.css";
+
+import "../public/styles/custom-bootstrap.scss";
 
 import * as gtag from "../helpers/gtag";
 
